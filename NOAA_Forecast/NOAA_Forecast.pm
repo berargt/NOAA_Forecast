@@ -1,5 +1,4 @@
 package NOAA_Forecast;
-##!/usr/bin/perl
 
 sub GetForecast() {
    my $noaa_url = '\'https://forecast.weather.gov/product.php?site=CRH&issuedby=ILX&product=ZFP&format=txt&version=3&glossary=0\'';
@@ -9,9 +8,9 @@ sub GetForecast() {
    my $gotTimeDateFlag = 0;
    my $runningFlag = 0;
    my $DayForecast = "";
-   my $TimeDate;
-   my @Data;
-   my $tmp;
+   my $Day; #ordered list of the days that is used to index the hash
+   my %forecast;
+   my $key;
 
    foreach ( @html ) {
 
@@ -36,7 +35,7 @@ sub GetForecast() {
             ; # skip
          } elsif ( $gotTimeDateFlag == 0 ) {
             $gotTimeDateFlag = 1;
-            $TimeDate = $_;
+            $forecast{'TimeDate'} = $_;
          } elsif (m/\n/) {
             ; # skip
          }
@@ -45,14 +44,13 @@ sub GetForecast() {
             if ( $1 ) { # New Day
                if ( $DayForecast eq "" && $runningFlag == 0) { # Starting 
                   $runningFlag = 1;
-                  $DayForecast = $2;
                }
                else
                {
-                  push (@Data, $DayForecast);
-                  $DayForecast = "";
+                  $forecast{$key} = $DayForecast; 
                }
-               push (@Data, $1);
+               push (@Day, $1);
+               $key = $1;
                $DayForecast = $2;
             }
             else
@@ -64,10 +62,9 @@ sub GetForecast() {
       }
    }
 
-   push (@Data, $DayForecast); # get the last forecast
+   $forecast{$key} = $DayForecast; 
 
-   return ($TimeDate, @Data);
+   return \@Day, %forecast;
 }
-
 
 1;

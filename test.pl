@@ -5,11 +5,16 @@
 use lib "/home/greg/FORECAST_VANTAGE_PRO/NEW_FORECAST/NOAA_Forecast";
 use NOAA_Forecast;
 
-(my $TimeDate, my @Data) = NOAA_Forecast::GetForecast();
+my @Day; 
+my $TimeDate;
+my %forecast;
 
-print $TimeDate . "\n";
+( $Day, %forecast )  = NOAA_Forecast::GetForecast();
 
-foreach ( @Data ) {
-   my ($a) = $_;
-   print $a . "\n";
+print $forecast{TimeDate} . "\n";
+#print @Day;
+
+foreach ( @$Day ) {
+   print $_ . " <---> " . $forecast{$_} . "\n";
 }
+
