@@ -35,6 +35,21 @@ foreach ( @$Day ) {
    if ($day_forecast =~/(\d+s)/) {
       print "<b> " . $1 . " </b><br>";
    }
+   elsif ($day_forecast =~/(Highs around \d+)/) {
+      print "<b> " . $1 . " </b><br>";
+   }
+   elsif ($day_forecast =~/around (\d+)/) {
+      print "<b> " . $1 . " </b><br>";
+   }
+
+
+   # get the Wind (mph)
+   if ($day_forecast =~/winds (\d+ to \d+ mph)/) {
+      print "<b> Winds " . $1 . " </b><br>";
+   }
+   elsif ($day_forecast =~/winds (around \d+ mph)/) {
+      print "<b> Winds " . $1 . " </b><br>";
+   }
 
    print $_ . " <===> " . "</b>" . $day_forecast . "<br>" . "\n";
    print "<br>\n";
